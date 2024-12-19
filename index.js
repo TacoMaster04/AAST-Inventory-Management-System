@@ -19,57 +19,88 @@ app.get("/", (req, res) => {
 
 app.get("/products", async (req, res) => {
 	const products = await Product.find();
-	res.json(products);
+	res.status(200).json(products);
 });
 
 app.get("/categories", async (req, res) => {
 	const categories = await Category.find();
-	res.json(categories);
+	res.status(200).json(categories);
 });
 
 app.get("/products/:id", async (req, res) => {
 	const product = await Product.findById(req.params.id);
-	res.json(product);
+	
+	if (!product) {
+		return res.status(404).json({ message: "Product not found" });
+	}
+
+	res.status(200).json(product);
 });
 
 app.get("/categories/:id", async (req, res) => {
 	const category = await Category.findById(req.params.id);
-	res.json(category);
+	
+	if (!category) {
+		return res.status(404).json({ message: "Category not found" });
+	}
+
+	res.status(200).json(category);
 });
 
 app.post("/products", async (req, res) => {
-	const product = new Product(req.body);
-	await product.save();
-	res.json(product);
+	try {
+		const product = new Product(req.body);
+		await product.save();
+		res.status(200).json(product);
+	} catch (err) {
+		res.status(500).json({ success: false, message: err.message });
+	}
 });
 
 app.post("/categories", async (req, res) => {
-	const category = new Category(req.body);
-	await category.save();
-	res.json(category);
+	try {
+		const category = new Category(req.body);
+		await category.save();
+		res.status(200).json(category);
+	} catch (err) {
+		res.status(500).json({ success: false, message: err.message });
+
+	}
 });
 
 app.put("/products/:id", async (req, res) => {
 	const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
 	});
-	res.json(product);
+
+	if (!product) {
+		return res.status(404).json({ message: "Product not found" });
+	}
+
+	res.status(200).json(product);
 });
 
 app.put("/categories/:id", async (req, res) => {
 	const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
 	});
-	res.json(category);
+
+	if (!category) {
+		return res.status(404).json({ message: "Category not found" });
+	}
+
+	res.status(200).json(category);
 });
 
 app.delete("/products/:id", async (req, res) => {
 	try {
 		const productId = String(req.params.id);
 		const product = await Product.findById(productId);
+		
 		if (!product) {
 			return res.status(404).json({ message: "product not found" });
 		}
+
 		const removedproduct = await Product.findByIdAndDelete(productId);
 		res.status(200).json(removedproduct);
 	} catch (err) {
@@ -81,9 +112,11 @@ app.delete("/categories/:id", async (req, res) => {
 	try {
 		const categoryId = String(req.params.id);
 		const category = await Category.findById(categoryId);
+		
 		if (!category) {
 			return res.status(404).json({ message: "Category not found" });
 		}
+
 		const removedCategory = await Category.findByIdAndDelete(categoryId);
 		res.status(200).json(removedCategory);
 	} catch (err) {
