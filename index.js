@@ -13,6 +13,10 @@ app.use(cors());
 mongoose.connect(`mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@cluster0.3vhsy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
 	.then(console.log("Connected to the database successfully"));
 
+app.get("/", (req, res) => {
+	res.sendFile(__dirname + "/index.html");
+});
+
 app.get("/products", async (req, res) => {
 	const products = await Product.find();
 	res.json(products);
@@ -69,7 +73,7 @@ app.delete("/products/:id", async (req, res) => {
 		const removedproduct = await Product.findByIdAndDelete(productId);
 		res.status(200).json(removedproduct);
 	} catch (err) {
-		res.status(500).json({ success: false, message: err.message	 });
+		res.status(500).json({ success: false, message: err.message });
 	}
 });
 
@@ -83,7 +87,7 @@ app.delete("/categories/:id", async (req, res) => {
 		const removedCategory = await Category.findByIdAndDelete(categoryId);
 		res.status(200).json(removedCategory);
 	} catch (err) {
-		res.status(500).json({ success: false, message: err.message	 });
+		res.status(500).json({ success: false, message: err.message });
 	}
 });
 
