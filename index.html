@@ -74,7 +74,7 @@
 			const description = document.getElementById('productDescription').value;
 			const categoryId = document.getElementById('productCategory').value;
 
-			const response = await fetch('http://localhost:3030/products', {
+			const response = await fetch('/products', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ name, price, quantity, description, categoryId })
@@ -92,7 +92,7 @@
 
 			const newCategory = { name: name, description: description };
 
-			const response = await fetch('http://localhost:3030/categories', {
+			const response = await fetch('/categories', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(newCategory)
@@ -105,13 +105,13 @@
 		});
 
 		async function fetchProducts() {
-			const getProducs = await fetch('http://localhost:3030/products');
+			const getProducs = await fetch('/products');
 			const products = await getProducs.json();
 			products.forEach(product => addProductToList(product));
 		}
 
 		async function fetchCategories() {
-			const getCategories = await fetch('http://localhost:3030/categories');
+			const getCategories = await fetch('/categories');
 			const categories = await getCategories.json();
 			categories.forEach(category => addCategoryToList(category));
 			populateCategoryDropdown(categories);
@@ -137,7 +137,7 @@
 			deleteButton.className = 'btn btn-danger btn-sm float-right';
 			deleteButton.textContent = 'Delete';
 			deleteButton.onclick = async () => {
-				await fetch(`http://localhost:3030/products/${product._id}`, {
+				await fetch(`/products/${product._id}`, {
 					method: 'DELETE'
 				});
 				li.remove();
@@ -166,7 +166,7 @@
 			deleteButton.className = 'btn btn-danger btn-sm float-right';
 			deleteButton.textContent = 'Delete';
 			deleteButton.onclick = async () => {
-				await fetch(`http://localhost:3030/categories/${category._id}`, {
+				await fetch(`/categories/${category._id}`, {
 					method: 'DELETE'
 				});
 				li.remove();
